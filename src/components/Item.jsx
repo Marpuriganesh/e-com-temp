@@ -16,15 +16,16 @@ const Item = ({ itemVarients, itemDetailsVarients, children }) => {
             />
             <motion.img id="add-to-cart" src={addToCart} alt="add to cart" />
           </motion.div>
-          <motion.span className="title" variants={itemDetailsVarients}>
-            {children.title}
-          </motion.span>
           <motion.span
             className="category_container"
             variants={itemDetailsVarients}
           >
             <motion.span className="category">{children.category}</motion.span>
           </motion.span>
+          <motion.span className="title" variants={itemDetailsVarients}>
+            {children.title}
+          </motion.span>
+
           <motion.span className="price" variants={itemDetailsVarients}>
             <motion.span variants={itemDetailsVarients}>
               <span id="dollar">$</span>
