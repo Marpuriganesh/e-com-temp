@@ -2,10 +2,19 @@ import PropTypes from "prop-types";
 import addToCart from "../assets/add-to-cart-3046.svg";
 import { motion } from "motion/react";
 
-const Item = ({ itemVarients, itemDetailsVarients, children }) => {
+const Item = ({
+  itemContainerVarients,
+  itemVarients,
+  itemDetailsVarients,
+  children,
+}) => {
   return (
     <>
-      <motion.div className="item_container" variants={itemVarients} layout>
+      <motion.div
+        className="item_container"
+        variants={itemContainerVarients}
+        layout
+      >
         <motion.div className="item" variants={itemVarients}>
           <motion.div className="img_container" variants={itemDetailsVarients}>
             <motion.img
@@ -45,6 +54,7 @@ const Item = ({ itemVarients, itemDetailsVarients, children }) => {
 };
 
 Item.propTypes = {
+  itemContainerVarients: PropTypes.any,
   itemVarients: PropTypes.any,
   itemDetailsVarients: PropTypes.any,
   children: PropTypes.any,

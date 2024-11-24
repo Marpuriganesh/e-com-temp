@@ -10,8 +10,15 @@ const containerVarients = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.5,
     },
+  },
+};
+
+const itemContainerVarients = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
   },
 };
 
@@ -32,31 +39,45 @@ const itemDetailsVarients = {
 
 function App() {
   const loaderRef = useRef(null);
-  const items = data;
-  const batch_size = 6;
-  const [batchNumber, setBatchNumber] = useState(0);
-  const [sliceitems, setSliceItems] = useState(
-    items.slice(batchNumber, batch_size)
-  );
+  const batchSize = 6;
+
+  const [items, setItems] = useState([]);
+  const [batchIndex, setBatchIndex] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        console.log("intersecting");
-        setBatchNumber((prev) => prev + batch_size);
+    const loadMore = () => {
+      const start = batchIndex * batchSize;
+      const end = start + batchSize;
+      const nextBatch = data.slice(start, end);
+
+      if (nextBatch.length > 0) {
+        setItems((prevItems) => [...prevItems, ...nextBatch]);
+        setBatchIndex((prevIndex) => prevIndex + 1);
       }
-    });
+      if (end >= data.length) {
+        setHasMore(false); // No more items to load
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          console.log("intersecting");
+          loadMore();
+        }
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of the element is visible
+      }
+    );
     if (loaderRef.current) {
       observer.observe(loaderRef.current);
     }
     return () => {
       observer.disconnect();
     };
-  }, []);
-
-  useEffect(() => {
-    setSliceItems(items.slice(batchNumber, batchNumber + 7));
-  }, [batchNumber, items]);
+  }, [batchIndex]);
 
   return (
     <>
@@ -68,18 +89,21 @@ function App() {
           initial="hidden"
           animate="show"
         >
-          {sliceitems.map((item) => (
+          {items.map((item) => (
             <Item
               key={item.id}
+              itemContainerVarients={itemContainerVarients}
               itemVarients={itemVarients}
               itemDetailsVarients={itemDetailsVarients}
             >
               {item}
             </Item>
           ))}
-          <div className="loader" ref={loaderRef}>
-            <PropagateLoader color="#ffffff" />
-          </div>
+          {hasMore && (
+            <div className="loader" ref={loaderRef}>
+              <PropagateLoader color="#ffffff" />
+            </div>
+          )}
         </motion.div>
       </div>
     </>
