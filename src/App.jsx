@@ -1,10 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-
+import Item from "./components/Item";
 import { data } from "./assets/data";
 import { motion } from "motion/react";
-import PropTypes from "prop-types";
 import { PropagateLoader } from "react-spinners";
-import addToCart from "./assets/add-to-cart-3046.svg";
 import "./App.css";
 
 const containerVarients = {
@@ -71,7 +69,13 @@ function App() {
           animate="show"
         >
           {sliceitems.map((item) => (
-            <Item key={item.id}>{item}</Item>
+            <Item
+              key={item.id}
+              itemVarients={itemVarients}
+              itemDetailsVarients={itemDetailsVarients}
+            >
+              {item}
+            </Item>
           ))}
           <div className="loader" ref={loaderRef}>
             <PropagateLoader color="#ffffff" />
@@ -83,51 +87,6 @@ function App() {
 }
 
 export default App;
-
-const Item = ({ children }) => {
-  return (
-    <>
-      <motion.div className="item_container" variants={itemVarients}>
-        <motion.div className="item" variants={itemVarients}>
-          <motion.div className="img_container" variants={itemDetailsVarients}>
-            <motion.img
-              src={children.image}
-              alt={children.title}
-              variants={itemDetailsVarients}
-              id="img"
-            />
-            <motion.img id="add-to-cart" src={addToCart} alt="add to cart" />
-          </motion.div>
-          <motion.span className="title" variants={itemDetailsVarients}>
-            {children.title}
-          </motion.span>
-          <motion.span
-            className="category_container"
-            variants={itemDetailsVarients}
-          >
-            <motion.span className="category">{children.category}</motion.span>
-          </motion.span>
-          <motion.span className="price" variants={itemDetailsVarients}>
-            <motion.span variants={itemDetailsVarients}>
-              <span id="dollar">$</span>
-              {children.price}
-            </motion.span>
-            <motion.button
-              variants={itemDetailsVarients}
-              whileHover={{ scale: 1.05 }}
-            >
-              Buy
-            </motion.button>
-          </motion.span>
-        </motion.div>
-      </motion.div>
-    </>
-  );
-};
-
-Item.propTypes = {
-  children: PropTypes.node,
-};
 
 const NavBar = () => {
   return (
