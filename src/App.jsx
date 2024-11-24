@@ -57,10 +57,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setSliceItems((prev) => [
-      ...prev,
-      ...items.slice(batchNumber, batchNumber + 7),
-    ]);
+    setSliceItems(items.slice(batchNumber, batchNumber + 7));
   }, [batchNumber, items]);
 
   return (
