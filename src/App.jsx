@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Item from "./components/Item";
 import { data } from "./assets/data";
+import { catagories } from "./assets/data";
 import { motion } from "motion/react";
 import { PropagateLoader } from "react-spinners";
 import "./App.css";
@@ -10,7 +11,7 @@ const containerVarients = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.5,
+      staggerChildren: 0.2,
     },
   },
 };
@@ -89,6 +90,22 @@ function App() {
           initial="hidden"
           animate="show"
         >
+          <motion.div className="select_catagories">
+            {catagories.map((c, id) => {
+              return (
+                <motion.span
+                  key={id}
+                  whileHover={{
+                    scale: 1.07,
+                    fontFamily: "Helvetica, sans-serif",
+                  }}
+                  variants={itemDetailsVarients}
+                >
+                  {c}
+                </motion.span>
+              );
+            })}
+          </motion.div>
           {items.map((item) => (
             <Item
               key={item.id}
@@ -115,7 +132,13 @@ export default App;
 const NavBar = () => {
   return (
     <>
-      <div className="nav"></div>
+      <motion.div
+        className="nav"
+        initial={{ height: 0 }}
+        animate={{ height: "3.5em" }}
+      >
+        <span>E</span>
+      </motion.div>
     </>
   );
 };
