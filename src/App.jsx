@@ -7,7 +7,7 @@ import { PropagateLoader } from "react-spinners";
 import "./App.css";
 
 const containerVarients = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   show: {
     opacity: 1,
     transition: {
@@ -38,6 +38,17 @@ const itemDetailsVarients = {
   show: { opacity: 1, scale: 1 },
 };
 
+const selectionBarVarients = {
+  hidden: { scaleY: 0 },
+  show: {
+    scaleY: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delay: 0.2,
+    },
+  },
+};
+
 function App() {
   const loaderRef = useRef(null);
   const batchSize = 6;
@@ -45,18 +56,35 @@ function App() {
   const [items, setItems] = useState([]);
   const [batchIndex, setBatchIndex] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedCatagory, setSelectedCatagory] = useState("All");
+  const [itemsData, setItemsData] = useState(data);
+
+  useEffect(() => {
+    // console.log(
+    //   "itemsData",
+    //   itemsData.filter((i) => i.category === "men's clothing")
+    // );
+    setItemsData(
+      selectedCatagory === "All"
+        ? data
+        : data.filter((i) => i.category === selectedCatagory.toLowerCase())
+    );
+    setBatchIndex(0);
+    setHasMore(true);
+    setItems([]);
+  }, [selectedCatagory]);
 
   useEffect(() => {
     const loadMore = () => {
       const start = batchIndex * batchSize;
       const end = start + batchSize;
-      const nextBatch = data.slice(start, end);
+      const nextBatch = itemsData.slice(start, end);
 
       if (nextBatch.length > 0) {
         setItems((prevItems) => [...prevItems, ...nextBatch]);
         setBatchIndex((prevIndex) => prevIndex + 1);
       }
-      if (end >= data.length) {
+      if (end >= itemsData.length) {
         setHasMore(false); // No more items to load
       }
     };
@@ -78,7 +106,7 @@ function App() {
     return () => {
       observer.disconnect();
     };
-  }, [batchIndex]);
+  }, [batchIndex, itemsData]);
 
   return (
     <>
@@ -90,17 +118,27 @@ function App() {
           initial="hidden"
           animate="show"
         >
-          <motion.div className="select_catagories">
+          <motion.div
+            className="select_catagories"
+            variants={selectionBarVarients}
+            style={{ transformOrigin: "0 0" }}
+          >
             {catagories.map((c, id) => {
               return (
                 <motion.span
                   key={id}
-                  whileHover={{
-                    scale: 1.07,
-                    fontFamily: "Helvetica, sans-serif",
-                  }}
+                  // whileHover={{
+                  //   scale: `${selectedCatagory === c ? 1 : 1.1}`,
+                  // }}
                   variants={itemDetailsVarients}
+                  style={{
+                    color: `${selectedCatagory === c ? "white" : ""}`,
+                  }}
+                  onClick={() => setSelectedCatagory(c)}
                 >
+                  {selectedCatagory === c && (
+                    <motion.div layoutId="animate" className="select_animate" />
+                  )}
                   {c}
                 </motion.span>
               );
@@ -137,7 +175,22 @@ const NavBar = () => {
         initial={{ height: 0 }}
         animate={{ height: "3.5em" }}
       >
-        <span>E</span>
+        <span>
+          <img
+            src={"https://www.svgrepo.com/show/311482/wrench.svg"}
+            alt="gear"
+            id="gear"
+          />
+        </span>
+        <span id="logo">ECOM</span>
+        <span id="user_icons">
+          <img
+            src={"https://www.svgrepo.com/show/529450/cart-large-2.svg"}
+            alt="cart"
+            id="cart"
+          />
+          <img src={"https://www.svgrepo.com/show/527946/user-circle.svg"} alt="user" id="user" />
+        </span>
       </motion.div>
     </>
   );
