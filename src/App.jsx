@@ -189,7 +189,11 @@ const NavBar = () => {
             alt="cart"
             id="cart"
           />
-          <img src={"https://www.svgrepo.com/show/527946/user-circle.svg"} alt="user" id="user" />
+          <img
+            src={"https://www.svgrepo.com/show/527946/user-circle.svg"}
+            alt="user"
+            id="user"
+          />
         </span>
       </motion.div>
     </>

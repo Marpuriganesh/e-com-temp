@@ -153,6 +153,7 @@
 
   border-radius: 100vw;
   margin-block-start: 10em;
+  margin-block-end: 1.4em;
   -webkit-border-radius: 100vw;
   -moz-border-radius: 100vw;
   -ms-border-radius: 100vw;
@@ -312,6 +313,18 @@
 
 @media (min-width: 1200px) and (max-width: 1439px) {
   .item_container {
-    width: 25em;
+    width: 24em;
+    height: 30em;
+  }
+  .nav {
+    span {
+      font-size: medium;
+    }
+  }
+  .items_container {
+    .select_catagories {
+      font-size: 0.8em;
+      top: 4em;
+    }
   }
 }
