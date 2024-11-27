@@ -6,6 +6,7 @@ const Item = ({
   itemContainerVarients,
   itemVarients,
   itemDetailsVarients,
+  onClick,
   children,
 }) => {
   return (
@@ -13,7 +14,8 @@ const Item = ({
       <motion.div
         className="item_container"
         variants={itemContainerVarients}
-        layout
+        onClick={onClick}
+        layoutId={`product-${children.id}`}
       >
         <motion.div className="item" variants={itemVarients}>
           <motion.div className="img_container" variants={itemDetailsVarients}>
@@ -57,6 +59,7 @@ Item.propTypes = {
   itemContainerVarients: PropTypes.any,
   itemVarients: PropTypes.any,
   itemDetailsVarients: PropTypes.any,
+  onClick: PropTypes.func,
   children: PropTypes.any,
 };
 
