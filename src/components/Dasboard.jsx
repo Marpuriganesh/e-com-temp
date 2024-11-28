@@ -1,10 +1,11 @@
 import { data } from "../assets/data";
 import { catagories } from "../assets/data";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "motion/react";
-import Item from "./Item";
-import { Outlet, useNavigate } from "react-router-dom";
+import ItemEdit from "./ItemEdit";
+// import { Outlet, useNavigate } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
+import "./css/Dasboard.css";
 
 const containerVarients = {
   hidden: { opacity: 1 },
@@ -49,17 +50,20 @@ const selectionBarVarients = {
   },
 };
 
-function BaseElement() {
+function Dasboard() {
   const loaderRef = useRef(null);
   const batchSize = 6;
-
   const [items, setItems] = useState([]);
   const [batchIndex, setBatchIndex] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [selectedCatagory, setSelectedCatagory] = useState("All");
-  const [selectedItem, setSelectedItem] = useState(null);
+  //   const [selectedItem, setSelectedItem] = useState(null);
   const [itemsData, setItemsData] = useState(data);
-  const navigate = useNavigate();
+  //   const navigate = useNavigate();
+
+  const removeItem = useCallback((id) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  }, []);
 
   useEffect(() => {
     // console.log(
@@ -112,61 +116,66 @@ function BaseElement() {
 
   return (
     <>
-      <motion.div
-        className=" items_container"
-        variants={containerVarients}
-        initial="hidden"
-        animate="show"
-      >
+      <motion.div className="dashboard">
         <motion.div
-          className="select_catagories"
-          variants={selectionBarVarients}
-          style={{ transformOrigin: "0 0" }}
+          className=" items_container"
+          variants={containerVarients}
+          initial="hidden"
+          animate="show"
         >
-          {catagories.map((c, id) => {
-            return (
-              <motion.span
-                key={id}
-                // whileHover={{
-                //   scale: `${selectedCatagory === c ? 1 : 1.1}`,
-                // }}
-                variants={itemDetailsVarients}
-                style={{
-                  color: `${selectedCatagory === c ? "white" : ""}`,
-                }}
-                onClick={() => setSelectedCatagory(c)}
-              >
-                {selectedCatagory === c && (
-                  <motion.div layoutId="animate" className="select_animate" />
-                )}
-                {c}
-              </motion.span>
-            );
-          })}
-        </motion.div>
-        {items.map((item) => (
-          <Item
-            key={item.id}
-            itemContainerVarients={itemContainerVarients}
-            itemVarients={itemVarients}
-            itemDetailsVarients={itemDetailsVarients}
-            onClick={() => {
-              setSelectedItem(item);
-              navigate(`/product/${item.id}`);
-            }}
+          <motion.div
+            className="select_catagories"
+            variants={selectionBarVarients}
+            style={{ transformOrigin: "0 0" }}
           >
-            {item}
-          </Item>
-        ))}
-        {hasMore && (
-          <div className="loader" ref={loaderRef}>
-            <PropagateLoader color="#ffffff" />
-          </div>
-        )}
+            {catagories.map((c, id) => {
+              return (
+                <motion.span
+                  key={id}
+                  // whileHover={{
+                  //   scale: `${selectedCatagory === c ? 1 : 1.1}`,
+                  // }}
+                  variants={itemDetailsVarients}
+                  style={{
+                    color: `${selectedCatagory === c ? "white" : ""}`,
+                  }}
+                  onClick={() => setSelectedCatagory(c)}
+                >
+                  {selectedCatagory === c && (
+                    <motion.div layoutId="animate" className="select_animate" />
+                  )}
+                  {c}
+                </motion.span>
+              );
+            })}
+          </motion.div>
+          {items.map((item) => (
+            <>
+              <ItemEdit
+                key={item.id}
+                itemContainerVarients={itemContainerVarients}
+                itemVarients={itemVarients}
+                itemDetailsVarients={itemDetailsVarients}
+                onClick={() => {
+                  //   setSelectedItem(item);
+                  //   navigate(`/product/${item.id}`);
+                }}
+                removeItem={removeItem}
+              >
+                {item}
+              </ItemEdit>
+            </>
+          ))}
+          {hasMore && (
+            <div className="loader" ref={loaderRef}>
+              <PropagateLoader color="#ffffff" />
+            </div>
+          )}
+        </motion.div>
+        {/* <Outlet context={{selectedItem}} /> */}
       </motion.div>
-      <Outlet context={{selectedItem}} />
     </>
   );
 }
 
-export default BaseElement;
+export default Dasboard;

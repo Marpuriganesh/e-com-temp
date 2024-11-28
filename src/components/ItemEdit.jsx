@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
-import addToCart from "../assets/add-to-cart-3046.svg";
 import { motion } from "motion/react";
+import "./css/ItemEdit.css";
 
-const Item = ({
+const ItemEdit = ({
   itemContainerVarients,
   itemVarients,
   itemDetailsVarients,
   onClick,
+  removeItem,
   children,
 }) => {
   return (
@@ -16,8 +17,9 @@ const Item = ({
         variants={itemContainerVarients}
         onClick={onClick}
         layoutId={`product-${children.id}`}
+        layout
       >
-        <motion.div className="item" variants={itemVarients}>
+        <motion.div className="itemEdit" variants={itemVarients}>
           <motion.div className="img_container" variants={itemDetailsVarients}>
             <motion.img
               src={children.image}
@@ -26,7 +28,14 @@ const Item = ({
               id="img"
               layoutId={`img-${children.id}`}
             />
-            <motion.img id="add-to-cart" src={addToCart} alt="add to cart" />
+            <motion.img
+              id="delete-item"
+              src={"https://www.svgrepo.com/show/502608/delete-2.svg"}
+              alt="delete"
+              onClick={() => {
+                removeItem(children.id);
+              }}
+            />
           </motion.div>
           <motion.span
             className="category_container"
@@ -47,7 +56,7 @@ const Item = ({
               variants={itemDetailsVarients}
               whileHover={{ scale: 1.05 }}
             >
-              Buy
+              Edit
             </motion.button>
           </motion.span>
         </motion.div>
@@ -56,12 +65,13 @@ const Item = ({
   );
 };
 
-Item.propTypes = {
+ItemEdit.propTypes = {
   itemContainerVarients: PropTypes.any,
   itemVarients: PropTypes.any,
   itemDetailsVarients: PropTypes.any,
   onClick: PropTypes.func,
+  removeItem: PropTypes.func,
   children: PropTypes.any,
 };
 
-export default Item;
+export default ItemEdit;

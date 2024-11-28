@@ -1,11 +1,11 @@
 import { motion } from "motion/react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import "./css/Product.css";
 
 function Product() {
-  const id = useParams();
   const navigate = useNavigate();
-  //   console.log(id);
+  const { selectedItem } = useOutletContext();
+
   return (
     <>
       <motion.div
@@ -16,10 +16,19 @@ function Product() {
       >
         <motion.div
           className="product_container"
-          layoutId={`product-1`}
+          layoutId={`product-${selectedItem.id}`}
           onClick={(e) => e.stopPropagation()}
         >
-          Product
+          <motion.div>
+            <motion.div className="img_container" >
+              <motion.img
+                src={selectedItem.image}
+                alt={selectedItem.title}
+                id="img"
+                layoutId={`img-${selectedItem.id}`}
+              />
+            </motion.div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </>
